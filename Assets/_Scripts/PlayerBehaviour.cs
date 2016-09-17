@@ -24,7 +24,7 @@ public class PlayerBehaviour : MonoBehaviour {
 		// Rotate player to face mouse
 		Rotation();
 		// Move the player's body
-		//Movement();
+		Movement();
 
 	}
 
@@ -38,5 +38,21 @@ public class PlayerBehaviour : MonoBehaviour {
 
 		Quaternion rot = Quaternion.Euler(new Vector3(0, 0, angle + 90));
 		this.transform.rotation = rot;
+	}
+
+	void Movement() {
+		Vector3 movement = new Vector3 ();
+		movement.x += Input.GetAxis ("Horizontal");
+		movement.y += Input.GetAxis ("Vertical");
+
+		movement.Normalize ();
+		if (movement.magnitude > 0) {
+			this.currentSpeed = this.playerSpeed;
+			this.transform.Translate (movement * Time.deltaTime * this.playerSpeed, Space.World);
+			this.lastMovement = movement;
+		} else {
+			this.transform.Translate (this.lastMovement * Time.deltaTime * this.currentSpeed, Space.World);
+			this.currentSpeed *= 0.9f;
+		}
 	}
 }
